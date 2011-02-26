@@ -23,6 +23,7 @@ def main():
     cl = colmax['loc']
     colmax['loc'] = tuple(reversed(cl))
     
+    diagmax = array_diag_mult(arr, consec_nums=4, ret_tuple=True, ret_loc=True)
     print rowmax
     print colmax
 
@@ -49,18 +50,25 @@ def array_row_mult(numpy_array, consec_nums=None, ret_tuple=False, ret_loc=False
             #print product
     return maxprod
 
-#def array_diag_mult(numpy_array, consec_nums=None, ret_tuple=False, ret_loc=False):
+def array_diag_mult(numpy_array, consec_nums=None, ret_tuple=False, ret_loc=False):
     
-
-
-
+    #so numpy has a diagonal method... so we'll leave this for now.
+    """
+    y = range(len(numpy_array))
+    x = range(len(numpy_array[y,]))
+    print max(x), max(y)
+    while(x < x+consec_nums and y < y+consec_nums)
+        factors = numpy_array[x,y]
+        x, y += 1 
+    """
+    """
     if product > maxprod['max']:
         maxprod['max'] = product
         if ret_tuple:
             maxprod['nums']=slc
         if ret_loc:
             maxprod['loc']= (x+1,y+1)
-    
+    """
 
 if __name__ == '__main__':
 	main()

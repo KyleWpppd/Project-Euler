@@ -9,22 +9,22 @@ Copyright (c) 2011 K. Lowell Design. All rights reserved.
 
 import sys
 import os
-
+import operator
 
 def main():
     pt = PythagoreanTriple()
+    desired_sum = 1000
     
     # use a set because we don't want duplucates
     # but we want it sorted...
     triples = list(set(pt.generate_triples(23)))
     triples.sort()
-    pt.triple_sum_tester(triples, 1000)
-    """
-    print triples
-    for a,b,c in triples:
-        if a < b < c:
-            print a, b, c
-    """
+    matches = pt.triple_sum_tester(triples, desired_sum, first_match_only=False)
+    for a,b,c in matches:
+        print ("Triple (%i, %i, %i) sums to %i" %(a, b, c, desired_sum))
+        prod = reduce(operator.mul, (a,b,c))
+    print prod
+
 
 
 class PythagoreanTriple(object):
@@ -36,15 +36,31 @@ class PythagoreanTriple(object):
                 triple = (m**2 - n**2, 2*m*n, m**2 + n**2)
                 yield triple
     
-    def triple_sum_tester(self, iterable_triples, test_sum):
-        for a, b, c in iterable_triples:
-            if (a < b < c):
-                print ("%i\t %i\t %i\t Sum: %i\tDiff: %i " %(a, b, c, a+b+c, a**2 + b**2 - c**2))
-                if(test_sum % (a+b+c) == 0):
-                    print "Triple (%i, %i, %i) is a match" % a, b, c
+    def triple_sum_tester(self, iterable_triplets=None, test_sum=None, first_match_only=True):
+        matching_triplets = []
+        if iterable_triplets is None or test_sum is None:
+            raise ValueError, "Please check function arguments, something is missing"
         
+        for a, b, c in iterable_triplets:
+            if a < c and b < c and (test_sum % (a+b+c) == 0):
+                #in a true triplet a < b < c, so swap a and b to make it pretty
+                if a > b: 
+                    a, b = b, a 
+            
+                k = test_sum / (a + b + c)
+                """
+                print ("Triple %i*(%i, %i, %i) is a match (%i, %i, %i)" 
+                        %(k, a, b, c, k*a, k*b, k*c)
+                        )
+                """
+                #probably should use map for something like this
+                matching_triplets.append( (k*a, k*b, k*c) )
+                if first_match_only:
+                    break
+        return list(set(matching_triplets))
+
 
 
 if __name__ == '__main__':
-	main()
+    main()
 

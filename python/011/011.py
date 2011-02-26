@@ -26,6 +26,7 @@ def main():
     diagmax = array_diag_mult(arr, consec_nums=4, ret_tuple=True, ret_loc=True)
     print rowmax
     print colmax
+    print diagmax
 
 def array2d_from_file(source):
     arr = np.loadtxt(source, dtype="int")
@@ -51,24 +52,24 @@ def array_row_mult(numpy_array, consec_nums=None, ret_tuple=False, ret_loc=False
     return maxprod
 
 def array_diag_mult(numpy_array, consec_nums=None, ret_tuple=False, ret_loc=False):
+    #y = range(len(numpy_array))
+    maxprod = {'max':0}
+    for y in range(len(numpy_array)):
+        for x in range(len(numpy_array[0,])):
+            diag = np.diagonal(numpy_array[y:], offset=x)
+            slc = diag[:consec_nums]
+            print slc
+            product = np.prod(slc)
+            if product > maxprod['max']:
+                maxprod['max'] = product
+                if ret_tuple:
+                    maxprod['nums']=slc
+                if ret_loc:
+                    maxprod['loc']= (x+1,y+1)
     
-    #so numpy has a diagonal method... so we'll leave this for now.
-    """
-    y = range(len(numpy_array))
-    x = range(len(numpy_array[y,]))
-    print max(x), max(y)
-    while(x < x+consec_nums and y < y+consec_nums)
-        factors = numpy_array[x,y]
-        x, y += 1 
-    """
-    """
-    if product > maxprod['max']:
-        maxprod['max'] = product
-        if ret_tuple:
-            maxprod['nums']=slc
-        if ret_loc:
-            maxprod['loc']= (x+1,y+1)
-    """
+    return maxprod
+
+
 
 if __name__ == '__main__':
 	main()

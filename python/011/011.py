@@ -12,7 +12,12 @@ import os
 import numpy as np
 import operator
 
-
+"""
+!!! 
+TODO: Make the diagmult return the correct column & row location when transposed
+TODO: Remove duplicated funtionality between the 2 functions
+TODO: Clean up code... this is really ugly.
+"""
 def main():
     infile = "numbers.txt"
     arr = array2d_from_file(infile)
@@ -20,13 +25,17 @@ def main():
     rowmax = array_row_mult(arr, consec_nums=4, ret_tuple=True, ret_loc=True)
     #note the x and y columns will be out of order here so we will have to swap them back
     colmax = array_row_mult(arr.swapaxes(0,1), consec_nums=4, ret_tuple=True, ret_loc=True)
-    cl = colmax['loc']
-    colmax['loc'] = tuple(reversed(cl))
+    lmax = colmax['loc']
+    colmax['loc'] = tuple(reversed(lmax))
     
-    diagmax = array_diag_mult(arr, consec_nums=4, ret_tuple=True, ret_loc=True)
+    xdiagmax = array_diag_mult(arr, consec_nums=4, ret_tuple=True, ret_loc=True)
+    ydiagmax = array_diag_mult(np.rot90(arr), consec_nums=4, ret_tuple=True, ret_loc=True)
+    lmax = ydiagmax['loc']
+    ydiagmax['loc'] = tuple(reversed(lmax))
     print rowmax
     print colmax
-    print diagmax
+    print xdiagmax
+    print ydiagmax
 
 def array2d_from_file(source):
     arr = np.loadtxt(source, dtype="int")
@@ -58,7 +67,7 @@ def array_diag_mult(numpy_array, consec_nums=None, ret_tuple=False, ret_loc=Fals
         for x in range(len(numpy_array[0,])):
             diag = np.diagonal(numpy_array[y:], offset=x)
             slc = diag[:consec_nums]
-            print slc
+            #print slc
             product = np.prod(slc)
             if product > maxprod['max']:
                 maxprod['max'] = product
